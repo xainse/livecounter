@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Live counter</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      var count = 0;
+      var interval = setInterval(function() {
+        count++;
+        $('#counter').text(count);
+      }, 1000);
+
+      let sessionUniqueRandomID 
+
+      let session = {
+        count: 0,
+        created: new Date(),
+        updated: new Date(),
+      }
+
+
+      let dayslabel = document.getElementById("days");
+      let hourslabel = document.getElementById("hours");
+      let minutesLabel = document.getElementById("minutes");
+      let secondsLabel = document.getElementById("seconds");
+      let totalSeconds = 0;
+      setInterval(setTime, 1000);
+
+      function setTime() {
+        ++totalSeconds;
+        secondsLabel.innerHTML = pad(totalSeconds % 60);
+        minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
+        hourslabel.innerHTML = pad(parseInt(totalSeconds / 3600));
+        dayslabel.innerHTML = pad(parseInt(totalSeconds / 86400));
+      }
+
+      function pad(val) {
+        var valString = val + "";
+        if (valString.length < 2) {
+          return "0" + valString;
+        } else {
+          return valString;
+        }
+      }
+
+    });
+    
+  
+  /* create live time counter
+    1. Check if we have previous counter in the local storage
+    2. If we have, get the value and display it
+    3. Check how old the counter is
+    4. If it's older than 1 minutes, show it and create a new counter
+    5. If it's younger than 1 minutes, show it and update the counter
+
+  */
+
+    
+  
+
+    </script>
+</head>
+
+<body>
+<div id="counter">0</div>
+<label id="days">0</label> day(s) <label id="hours">00</label>:<label id="minutes">00</label>:<label id="seconds">00</label>
+
+<div id="prev-counter">
+  <div id="prev-counter-start"></div>
+  <div id="prev-counter-end"></div>
+  <div id="prev-counter-duration"></div>
+</div>
+
+</body>
+</html>
