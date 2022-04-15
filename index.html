@@ -15,18 +15,43 @@
         $('#counter').text(count);
       }, 1000);
 
-      let session = {
-        count: 0,
-        created: new Date(),
-        updated: new Date(),
+      let totalSeconds = 0;
+      let session = readLocalStorage();
+      
+      if (session.updated - session.created < 2000) {
+        totalSeconds = session.count;
+      } else {
+        fillPreviousCount(session);      
+    }
+      
+      console.log(session.updated - session.created);
+
+
+      function readLocalStorage() {
+        return {
+          count: parseInt(localStorage.getItem('count')),
+          created: new Date(localStorage.getItem('created')),
+          updated: new Date(localStorage.getItem('updated')),
+        }
       }
+
+      function writeLocalStorage(count) {
+        localStorage.setItem('count', count);
+
+        if (count == 1) {
+          localStorage.setItem('created', new Date());
+        }
+
+        localStorage.setItem('updated', new Date());
+      }
+      //------------
 
 
       let dayslabel = document.getElementById("days");
       let hourslabel = document.getElementById("hours");
       let minutesLabel = document.getElementById("minutes");
       let secondsLabel = document.getElementById("seconds");
-      let totalSeconds = 0;
+      
       setInterval(setTime, 1000);
 
       function setTime() {
@@ -35,6 +60,11 @@
         minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
         hourslabel.innerHTML = pad(parseInt(totalSeconds / 3600));
         dayslabel.innerHTML = pad(parseInt(totalSeconds / 86400));
+
+        currentTime = convertSecondsToTime(totalSeconds);
+        console.log(currentTime);
+
+        writeLocalStorage(totalSeconds);
       }
 
       function pad(val) {
@@ -47,16 +77,39 @@
       }
 
     });
-    
-  
-  /* create live time counter
-    1. Check if we have previous counter in the local storage
-    2. If we have, get the value and display it
-    3. Check how old the counter is
-    4. If it's older than 1 minutes, show it and create a new counter
-    5. If it's younger than 1 minutes, show it and update the counter
+    function convertSecondsToTime(seconds) {
+        console.log('convertSecondsToTime: ',seconds);
+        let hours = parseInt(seconds / 3600);
+        let minutes = parseInt((seconds - (hours * 3600)) / 60);
+            seconds = seconds - (hours * 3600) - (minutes * 60);
+        let days = parseInt(hours / 24);  
 
-  */
+        if (hours < 10) {
+          hours = "0" + hours;
+        }
+        if (minutes < 10) {
+          minutes = "0" + minutes;
+        }
+        if (seconds < 10) {
+          seconds = "0" + seconds;
+        }
+        
+        if (days > 0 ) {
+          return days + "d " + hours + ":" + minutes + ":" + seconds;
+        } else {
+          return hours + ":" + minutes + ":" + seconds;
+        }
+  
+      }
+
+    
+
+    function fillPreviousCount(session) {
+      console.log(session);
+      document.getElementById("prev-counter-created").innerHTML = session.created;
+      document.getElementById("prev-counter-updated").innerHTML = session.updated;
+      document.getElementById("prev-counter-time").innerHTML = convertSecondsToTime(session.count);
+    }
 
     
   
@@ -66,12 +119,15 @@
 
 <body>
 <div id="counter">0</div>
+<div class="">
 <label id="days">0</label> day(s) <label id="hours">00</label>:<label id="minutes">00</label>:<label id="seconds">00</label>
+</div>
 
 <div id="prev-counter">
-  <div id="prev-counter-start"></div>
-  <div id="prev-counter-end"></div>
-  <div id="prev-counter-duration"></div>
+  <h2>Previous values:</h2>
+  <div id="prev-counter-created"></div>
+  <div id="prev-counter-updated"></div>
+  <div id="prev-counter-time"></div>
 </div>
 
 </body>
