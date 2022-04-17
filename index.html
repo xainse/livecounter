@@ -9,9 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
-   
-   
-    * {
+   * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
@@ -31,7 +29,6 @@
         background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
         background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
       }
-    
       .current-time{
         width: 100%;
         height: 80%;
@@ -48,18 +45,22 @@
         background: #FFF;
         padding: 20px;
         color: #000;
+        margin: 1px;
       }
   </style>
 
   <script>
-    $(document).ready(function() {
+
+  let totalSeconds = 0;
+  
+  $(document).ready(function() {
       var count = 0;
       var interval = setInterval(function() {
         count++;
         $('#counter').text(count);
       }, 1000);
 
-      let totalSeconds = 0;
+      
       let session = readLocalStorage();
       
       if (session.updated - session.created < 2000) {
@@ -74,10 +75,7 @@
     function setTime() {
         ++totalSeconds;
 
-        currentTime = convertSecondsToTime(totalSeconds);
-        document.getElementById("current-time").innerHTML = currentTime;
-        console.log(currentTime);
-
+        document.getElementById("current-time").innerHTML = convertSecondsToTime(totalSeconds);
         writeLocalStorage(totalSeconds);
       }
 
@@ -111,8 +109,8 @@
     function convertSecondsToTime(totalSecconds) {
         
         let hours = parseInt(totalSecconds / 3600);
-        let minutes = parseInt((seconds - (hours * 3600)) / 60);
-            seconds = seconds - (hours * 3600) - (minutes * 60);
+        let minutes = parseInt((totalSecconds - (hours * 3600)) / 60);
+        let seconds = totalSecconds - (hours * 3600) - (minutes * 60);
         let days = parseInt(hours / 24);  
 
         if (hours < 10)   { hours = "0" + hours;}
@@ -132,10 +130,15 @@
      * @param {object} session
      */ 
     function fillPreviousCount(session) {
-      console.log(session);
-      document.getElementById("prev-counter-created").innerHTML = session.created;
-      document.getElementById("prev-counter-updated").innerHTML = session.updated;
-      document.getElementById("prev-counter-time").innerHTML = convertSecondsToTime(session.count);
+      //  .log('Prev session', session);
+      let createdDate = new Date(session.created);
+      let durationSeconds = new Date(session.updated) - createdDate;
+      let duration = convertSecondsToTime(durationSeconds / 1000);
+      
+      document.getElementById("prev-counter-text").innerHTML = 
+        'Last time the site was running at ' 
+        + createdDate.toLocaleDateString('en-US', { weekday: "long", year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" })
+        + ' and was working during <strong>' + duration +'</strong>';
     }
 
     </script>
@@ -146,10 +149,8 @@
     <div class="current-time" id="current-time">00:00:00</div>
 
     <div id="prev-counter" class="prev-counter">
-      <h2>Previous values:</h2>
-      <div id="prev-counter-created"></div>
-      <div id="prev-counter-updated"></div>
-      <div id="prev-counter-time"></div>
+      <h2>Previous session:</h2>
+      <div id="prev-counter-text"></div>
     </div>
 </body>
 </html>
