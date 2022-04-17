@@ -4,8 +4,54 @@
   <meta charset="utf-8">
   <title>Live counter</title>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+   
+   
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html, body, main {
+        height: 100%;
+      }
+      body {
+        font-family: 'Share Tech Mono', monospace;
+        background-color: #269;
+        background-image:
+          linear-gradient(rgba(255,255,255,.5) 2px, transparent 2px),
+          linear-gradient(90deg, rgba(255,255,255,.5) 2px, transparent 2px),
+          linear-gradient(rgba(255,255,255,.28) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,.28) 1px, transparent 1px);
+        background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+        background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+      }
+    
+      .current-time{
+        width: 100%;
+        height: 80%;
+        margin-top: 10%;
+        font-size: 180px;
+        color: #fff;
+        text-align: center;
+        vertical-align: middle;
+      }
+      .prev-counter {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: #FFF;
+        padding: 20px;
+        color: #000;
+      }
+
+  
+  </style>
 
   <script>
     $(document).ready(function() {
@@ -44,36 +90,18 @@
 
         localStorage.setItem('updated', new Date());
       }
-      //------------
-
-
-      let dayslabel = document.getElementById("days");
-      let hourslabel = document.getElementById("hours");
-      let minutesLabel = document.getElementById("minutes");
-      let secondsLabel = document.getElementById("seconds");
+      //----------------------------------------------------------------------------------
       
       setInterval(setTime, 1000);
 
       function setTime() {
         ++totalSeconds;
-        secondsLabel.innerHTML = pad(totalSeconds % 60);
-        minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
-        hourslabel.innerHTML = pad(parseInt(totalSeconds / 3600));
-        dayslabel.innerHTML = pad(parseInt(totalSeconds / 86400));
-
+      
         currentTime = convertSecondsToTime(totalSeconds);
+        document.getElementById("current-time").innerHTML = currentTime;
         console.log(currentTime);
 
         writeLocalStorage(totalSeconds);
-      }
-
-      function pad(val) {
-        var valString = val + "";
-        if (valString.length < 2) {
-          return "0" + valString;
-        } else {
-          return valString;
-        }
       }
 
     });
@@ -118,17 +146,14 @@
 </head>
 
 <body>
-<div id="counter">0</div>
-<div class="">
-<label id="days">0</label> day(s) <label id="hours">00</label>:<label id="minutes">00</label>:<label id="seconds">00</label>
-</div>
+    <div id="counter">0</div>
+    <div class="current-time" id="current-time">00:00:00</div>
 
-<div id="prev-counter">
-  <h2>Previous values:</h2>
-  <div id="prev-counter-created"></div>
-  <div id="prev-counter-updated"></div>
-  <div id="prev-counter-time"></div>
-</div>
-
+    <div id="prev-counter" class="prev-counter">
+      <h2>Previous values:</h2>
+      <div id="prev-counter-created"></div>
+      <div id="prev-counter-updated"></div>
+      <div id="prev-counter-time"></div>
+    </div>
 </body>
 </html>
