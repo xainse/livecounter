@@ -49,8 +49,6 @@
         padding: 20px;
         color: #000;
       }
-
-  
   </style>
 
   <script>
@@ -68,35 +66,14 @@
         totalSeconds = session.count;
       } else {
         fillPreviousCount(session);      
-    }
-      
-      console.log(session.updated - session.created);
-
-
-      function readLocalStorage() {
-        return {
-          count: parseInt(localStorage.getItem('count')),
-          created: new Date(localStorage.getItem('created')),
-          updated: new Date(localStorage.getItem('updated')),
-        }
       }
-
-      function writeLocalStorage(count) {
-        localStorage.setItem('count', count);
-
-        if (count == 1) {
-          localStorage.setItem('created', new Date());
-        }
-
-        localStorage.setItem('updated', new Date());
-      }
-      //----------------------------------------------------------------------------------
       
       setInterval(setTime, 1000);
+    });
 
-      function setTime() {
+    function setTime() {
         ++totalSeconds;
-      
+
         currentTime = convertSecondsToTime(totalSeconds);
         document.getElementById("current-time").innerHTML = currentTime;
         console.log(currentTime);
@@ -104,23 +81,43 @@
         writeLocalStorage(totalSeconds);
       }
 
-    });
-    function convertSecondsToTime(seconds) {
-        console.log('convertSecondsToTime: ',seconds);
-        let hours = parseInt(seconds / 3600);
+    /**
+     * Read the initial information from the local storage
+     * @returns {counnt, created, updated}
+     */
+    function readLocalStorage() {
+        return {
+          count: parseInt(localStorage.getItem('count')),
+          created: new Date(localStorage.getItem('created')),
+          updated: new Date(localStorage.getItem('updated')),
+        }
+    }
+    /**
+     * Write the current count to the local storage
+     * @param {number} totalSeconds
+     */
+    function writeLocalStorage(count) {
+      localStorage.setItem('count', count);
+
+      if (count == 1) {
+        localStorage.setItem('created', new Date());
+      }
+      localStorage.setItem('updated', new Date());
+    }
+
+    /**
+     * the function to convert the seconds to human readble time
+     */ 
+    function convertSecondsToTime(totalSecconds) {
+        
+        let hours = parseInt(totalSecconds / 3600);
         let minutes = parseInt((seconds - (hours * 3600)) / 60);
             seconds = seconds - (hours * 3600) - (minutes * 60);
         let days = parseInt(hours / 24);  
 
-        if (hours < 10) {
-          hours = "0" + hours;
-        }
-        if (minutes < 10) {
-          minutes = "0" + minutes;
-        }
-        if (seconds < 10) {
-          seconds = "0" + seconds;
-        }
+        if (hours < 10)   { hours = "0" + hours;}
+        if (minutes < 10) { minutes = "0" + minutes;}
+        if (seconds < 10) { seconds = "0" + seconds; }
         
         if (days > 0 ) {
           return days + "d " + hours + ":" + minutes + ":" + seconds;
@@ -128,19 +125,18 @@
           return hours + ":" + minutes + ":" + seconds;
         }
   
-      }
+    }
 
-    
-
+    /**
+     * The whole idea of the project is to remember the time how long the counter was running
+     * @param {object} session
+     */ 
     function fillPreviousCount(session) {
       console.log(session);
       document.getElementById("prev-counter-created").innerHTML = session.created;
       document.getElementById("prev-counter-updated").innerHTML = session.updated;
       document.getElementById("prev-counter-time").innerHTML = convertSecondsToTime(session.count);
     }
-
-    
-  
 
     </script>
 </head>
