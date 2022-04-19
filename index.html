@@ -57,7 +57,9 @@
   <script>
 
   let totalSeconds = 0;
-  if (parseInt(localStorage.getItem('count')) == NaN) writeLocalStorage(0);
+  if (localStorage.getItem('count') == 'NaN') {
+    writeLocalStorage(1);
+  } 
     
     
   $(document).ready(function() {
