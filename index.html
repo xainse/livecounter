@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>Live counter</title>
@@ -57,7 +57,9 @@
   <script>
 
   let totalSeconds = 0;
-  
+  if (parseInt(localStorage.getItem('count')) == NaN) writeLocalStorage(0);
+    
+    
   $(document).ready(function() {
       var count = 0;
       var interval = setInterval(function() {
@@ -80,6 +82,7 @@
     function setTime() {
         ++totalSeconds;
 
+        if (totalSeconds )
         document.getElementById("current-time").innerHTML = convertSecondsToTime(totalSeconds);
         writeLocalStorage(totalSeconds);
       }
