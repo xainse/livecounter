@@ -56,36 +56,80 @@
 
   <script>
 
+  navigator.getBattery().then(battery => {
+    function updateAllBatteryInfo() {
+      updateChargeInfo();
+      updateLevelInfo();
+      updateChargingInfo();
+      updateDischargingInfo();
+    }
+    updateAllBatteryInfo();
+
+    battery.addEventListener('chargingchange', () => {
+      updateChargeInfo();
+    });
+    function updateChargeInfo() {
+      console.log("Battery charging? "
+        + (battery.charging ? "Yes" : "No"));
+    }
+
+    battery.addEventListener('levelchange', () => {
+      updateLevelInfo();
+    });
+    function updateLevelInfo() {
+      console.log("Battery level: "
+        + battery.level * 100 + "%");
+    }
+
+    battery.addEventListener('chargingtimechange', () => {
+      updateChargingInfo();
+    });
+    function updateChargingInfo() {
+      console.log("Battery charging time: "
+        + battery.chargingTime + " seconds");
+    }
+
+    battery.addEventListener('dischargingtimechange', () => {
+      updateDischargingInfo();
+    });
+    function updateDischargingInfo() {
+      console.log("Battery discharging time: "
+        + battery.dischargingTime + " seconds");
+    }
+
+  });
+
+
+// ------------------------------------------------------------
+
   let totalSeconds = 0;
   if (localStorage.getItem('count') == 'NaN') {
     writeLocalStorage(1);
   } 
     
     
-  $(document).ready(function() {
-      var count = 0;
-      var interval = setInterval(function() {
-        count++;
-        $('#counter').text(count);
-      }, 1000);
-
-      
-      let session = readLocalStorage();
-      
-      if (session.updated - session.created < 2000) {
-        totalSeconds = session.count;
-      } else {
-        fillPreviousCount(session);      
-      }
-      
+  $(document).ready(function() {      
       setInterval(setTime, 1000);
     });
 
     function setTime() {
         ++totalSeconds;
 
-        if (totalSeconds )
-        document.getElementById("current-time").innerHTML = convertSecondsToTime(totalSeconds);
+        if (totalSeconds)
+          document.getElementById("current-time").innerHTML = convertSecondsToTime(totalSeconds);
+
+        let session = readLocalStorage();
+        /**
+         * Буває ситуація, коли каунтер зупиняється, тому що сторінка на бекграунді, або на іншому екрані
+         * У цьому випадку, коли сторінка стає активною каунтер продовжує роботу з того місця, де він зупинився. 
+         * Це неправильна поведінка
+         *  - якщо сторінка повертається із бекграунда - то я не можу зрозуміти чи був комп виключився
+         * 
+         *  Треба детектити, чи збільшився рівень батарейки - чи ні. 
+         */
+        fillPreviousCount(session);
+        
+
         writeLocalStorage(totalSeconds);
       }
 
@@ -155,7 +199,6 @@
 </head>
 
 <body>
-    <div id="counter">0</div>
     <div class="current-time" id="current-time">00:00:00</div>
 
     <div id="prev-counter" class="prev-counter">
