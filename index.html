@@ -13,92 +13,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <style>
-   * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      html, body, main {
-        height: 100%;
-      }
-      body {
-        font-family: 'Share Tech Mono', monospace;
-        background-color: #269;
-        background-image:
-          linear-gradient(rgba(255,255,255,.5) 2px, transparent 2px),
-          linear-gradient(90deg, rgba(255,255,255,.5) 2px, transparent 2px),
-          linear-gradient(rgba(255,255,255,.28) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,.28) 1px, transparent 1px);
-        background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
-        background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
-      }
-      .current-time{
-        width: 100%;
-        height: 80%;
-        margin-top: 10%;
-        font-size: 180px;
-        color: #fff;
-        text-align: center;
-        vertical-align: middle;
-      }
-      .prev-counter {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        background: #FFF;
-        padding: 20px;
-        color: #000;
-        margin: 1px;
-      }
-  </style>
+  <link rel="stylesheet" href="./css/style.css" >
 
   <script>
 
-  navigator.getBattery().then(battery => {
-    function updateAllBatteryInfo() {
-      updateChargeInfo();
-      updateLevelInfo();
-      updateChargingInfo();
-      updateDischargingInfo();
-    }
-    updateAllBatteryInfo();
-
-    battery.addEventListener('chargingchange', () => {
-      updateChargeInfo();
-    });
-    function updateChargeInfo() {
-      console.log("Battery charging? "
-        + (battery.charging ? "Yes" : "No"));
-    }
-
-    battery.addEventListener('levelchange', () => {
-      updateLevelInfo();
-    });
-    function updateLevelInfo() {
-      console.log("Battery level: "
-        + battery.level * 100 + "%");
-    }
-
-    battery.addEventListener('chargingtimechange', () => {
-      updateChargingInfo();
-    });
-    function updateChargingInfo() {
-      console.log("Battery charging time: "
-        + battery.chargingTime + " seconds");
-    }
-
-    battery.addEventListener('dischargingtimechange', () => {
-      updateDischargingInfo();
-    });
-    function updateDischargingInfo() {
-      console.log("Battery discharging time: "
-        + battery.dischargingTime + " seconds");
-    }
-
-  });
-
+  
 
 // ------------------------------------------------------------
 
@@ -199,11 +118,25 @@
 </head>
 
 <body>
-    <div class="current-time" id="current-time">00:00:00</div>
+    <header class="header">
+      <h1>The Header</h1>
+      <p>The simple counter.
+      The counter aims to count how long your notebook can live on the battery.</p>
+       
+    </header>
+    <main class="main">
+      <div class="current-time" id="current-time">00:00:00</div>
+      <button class="start-button" id="start-button">GO!</button>
 
-    <div id="prev-counter" class="prev-counter">
-      <h2>Previous session:</h2>
-      <div id="prev-counter-text"></div>
-    </div>
+      <div id="prev-counter" class="prev-counter">
+        <h2>Previous session:</h2>
+        <div id="prev-counter-text"></div>
+      </div>
+    </main>
+    
+    <footer class="footer">
+      <a class="link" href="https://github.com/xainse/livecounter" target="_blank"><span class="icon github-icon"></span>Project Repository</a>
+      <a class="link" href="https://github.com/xainse/livecounter/issues" target="_blank"><span class="icon bug-icon"></span>Report a bug</a>
+    </footer>
 </body>
 </html>
